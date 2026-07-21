@@ -208,7 +208,7 @@
         'color: #c8943e; font-size: 16px; font-weight: bold;'
     );
     console.log(
-        '%c38 years of distinguished service at SCCL (1989-2026)',
+        '%c37 years of distinguished service at SCCL (1989-2026)',
         'color: #8b9bb4; font-size: 12px;'
     );
 
