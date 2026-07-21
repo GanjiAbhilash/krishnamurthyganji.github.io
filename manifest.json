@@ -1,0 +1,16 @@
+{
+    "name": "Shri Ganji Krishna Murthy - A Life of Excellence",
+    "short_name": "GKM Tribute",
+    "description": "Retirement tribute celebrating 38 years of distinguished service at SCCL by Shri Ganji Krishna Murthy, Additional General Manager (E&M).",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f1729",
+    "theme_color": "#c8943e",
+    "icons": [
+        {
+            "src": "favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}
