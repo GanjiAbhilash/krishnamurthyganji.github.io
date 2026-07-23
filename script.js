@@ -202,6 +202,75 @@
         });
     });
 
+    // ===== Fetch & Display Wishes from Google Sheets =====
+    const SHEET_ID = '1y2sZB8d1MT9tLpdeGU41I-Eg25n_hlCS-1AZAGhLQJw';
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+    async function loadWishes() {
+        const wishesGrid = document.getElementById('wishesGrid');
+        const wishesCount = document.getElementById('wishesCount');
+        if (!wishesGrid) return;
+
+        try {
+            const response = await fetch(SHEET_URL);
+            const text = await response.text();
+            // Google returns JSONP-like response, extract the JSON
+            const json = JSON.parse(text.substring(47, text.length - 2));
+            const rows = json.table.rows;
+
+            if (rows.length === 0) {
+                wishesGrid.innerHTML = '<div class="wishes-empty"><i class="fas fa-envelope-open"></i><p>Be the first to leave a wish!</p></div>';
+                return;
+            }
+
+            wishesCount.textContent = rows.length;
+            wishesGrid.innerHTML = '';
+
+            // Rows: [Timestamp, Name, Relation, Message, Memory]
+            rows.reverse().forEach((row, index) => {
+                const name = row.c[1] ? row.c[1].v : 'Anonymous';
+                const relation = row.c[2] ? row.c[2].v : '';
+                const message = row.c[3] ? row.c[3].v : '';
+                const memory = row.c[4] ? row.c[4].v : '';
+
+                if (!message) return;
+
+                const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+                const card = document.createElement('div');
+                card.className = 'wish-card';
+                card.style.animationDelay = `${index * 0.05}s`;
+
+                let html = `<div class="wish-message">${escapeHtml(message)}</div>`;
+                if (memory) {
+                    html += `<div class="wish-memory"><strong>A memory:</strong> ${escapeHtml(memory)}</div>`;
+                }
+                html += `<div class="wish-author">
+                    <div class="wish-avatar">${escapeHtml(initials)}</div>
+                    <div>
+                        <div class="wish-name">${escapeHtml(name)}</div>
+                        ${relation ? `<div class="wish-relation">${escapeHtml(relation)}</div>` : ''}
+                    </div>
+                </div>`;
+
+                card.innerHTML = html;
+                wishesGrid.appendChild(card);
+            });
+        } catch (err) {
+            wishesGrid.innerHTML = '<div class="wishes-empty">Wishes will appear here once submitted.</div>';
+        }
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    loadWishes();
+    // Refresh wishes every 2 minutes
+    setInterval(loadWishes, 120000);
+
     // ===== Console Easter Egg =====
     console.log(
         '%c🙏 Shri Ganji Krishna Murthy — A Life of Excellence',
