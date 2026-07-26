@@ -296,7 +296,8 @@
             'What was his role at SCCL?',
             'Tell me about his journey from Adoni',
             'What are his major achievements?',
-            'How many years did he serve?'
+            'How many years did he serve?',
+            'How can I contact him?'
         ];
 
         let conversationHistory = [];
@@ -379,6 +380,11 @@
         async function queryAI(userMessage, retries) {
             if (retries === undefined) retries = 0;
             conversationHistory.push({ role: 'user', content: userMessage });
+
+            // Cap conversation history to last 10 messages
+            if (conversationHistory.length > 10) {
+                conversationHistory = conversationHistory.slice(-10);
+            }
 
             var apiMessages = [];
             var recent = conversationHistory.slice(-6);
