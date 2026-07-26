@@ -271,6 +271,201 @@
     // Refresh wishes every 2 minutes
     setInterval(loadWishes, 120000);
 
+    // ======================== AI CHATBOT ========================
+    (function initChatbot() {
+        const fab = document.getElementById('chatbotFab');
+        const panel = document.getElementById('chatbotPanel');
+        const closeBtn = document.getElementById('chatbotClose');
+        const form = document.getElementById('chatbotForm');
+        const input = document.getElementById('chatbotInput');
+        const messages = document.getElementById('chatbotMessages');
+        if (!fab || !panel) return;
+
+        const API_URL = 'https://portfolio-chatbot.abhilashganji.workers.dev';
+        const HF_MODEL = 'meta-llama/Llama-3.1-8B-Instruct';
+
+        const MAX_MSG_LENGTH = 500;
+        const MAX_RETRIES = 2;
+        const RETRY_DELAY = 3000;
+        const RATE_LIMIT_WINDOW = 60000;
+        const RATE_LIMIT_MAX = 5;
+        const rateLimitLog = [];
+        let isProcessing = false;
+
+        const SUGGESTED_QUESTIONS = [
+            'What was his role at SCCL?',
+            'Tell me about his journey from Adoni',
+            'What are his major achievements?',
+            'How many years did he serve?'
+        ];
+
+        let conversationHistory = [];
+
+        function openChat() {
+            fab.classList.add('hidden');
+            panel.classList.add('open');
+        }
+        function closeChat() {
+            panel.classList.remove('open');
+            fab.classList.remove('hidden');
+        }
+
+        fab.addEventListener('click', () => {
+            openChat();
+            input.focus();
+        });
+        closeBtn.addEventListener('click', closeChat);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && panel.classList.contains('open')) closeChat();
+        });
+
+        function renderSuggestions() {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'chat-suggestions';
+            SUGGESTED_QUESTIONS.forEach(q => {
+                const btn = document.createElement('button');
+                btn.className = 'chat-suggestion-btn';
+                btn.textContent = q;
+                btn.addEventListener('click', () => {
+                    input.value = q;
+                    form.dispatchEvent(new Event('submit', { cancelable: true }));
+                    wrapper.remove();
+                });
+                wrapper.appendChild(btn);
+            });
+            messages.appendChild(wrapper);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        renderSuggestions();
+
+        function appendMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = 'chat-msg ' + (sender === 'user' ? 'chat-user' : 'chat-bot');
+            div.innerHTML = '<p>' + escapeHtml(text) + '</p>';
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+            return div;
+        }
+
+        function escapeHtml(str) {
+            const el = document.createElement('span');
+            el.textContent = str;
+            return el.innerHTML;
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.className = 'chat-msg chat-typing';
+            div.id = 'chatTyping';
+            div.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function removeTyping() {
+            const el = document.getElementById('chatTyping');
+            if (el) el.remove();
+        }
+
+        function isRateLimited() {
+            const now = Date.now();
+            while (rateLimitLog.length > 0 && rateLimitLog[0] < now - RATE_LIMIT_WINDOW) {
+                rateLimitLog.shift();
+            }
+            return rateLimitLog.length >= RATE_LIMIT_MAX;
+        }
+
+        async function queryAI(userMessage, retries) {
+            if (retries === undefined) retries = 0;
+            conversationHistory.push({ role: 'user', content: userMessage });
+
+            var apiMessages = [];
+            var recent = conversationHistory.slice(-6);
+            recent.forEach(function(msg) {
+                apiMessages.push({ role: msg.role === 'user' ? 'user' : 'assistant', content: msg.content });
+            });
+
+            try {
+                var controller = new AbortController();
+                var timeoutId = setTimeout(function() { controller.abort(); }, 30000);
+
+                var response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: HF_MODEL,
+                        messages: apiMessages,
+                        max_tokens: 200,
+                        temperature: 0.7,
+                        top_p: 0.9,
+                        site: 'gkm'
+                    }),
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    if (response.status === 503 && retries < MAX_RETRIES) {
+                        conversationHistory.pop();
+                        await new Promise(function(r) { setTimeout(r, RETRY_DELAY); });
+                        return queryAI(userMessage, retries + 1);
+                    }
+                    if (response.status === 429) {
+                        return 'Rate limited. Please wait a moment and try again.';
+                    }
+                    return 'Sorry, I hit an error. Please try again later.';
+                }
+
+                var data = await response.json();
+                var reply = '';
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    reply = data.choices[0].message.content.trim();
+                }
+                if (!reply) reply = 'Sorry, I couldn\'t generate a response. Please try again.';
+
+                conversationHistory.push({ role: 'assistant', content: reply });
+                return reply;
+            } catch (err) {
+                console.error('[Chatbot] error:', err);
+                if (err.name === 'AbortError') {
+                    return 'Request timed out. Please try again.';
+                }
+                if (retries < MAX_RETRIES) {
+                    conversationHistory.pop();
+                    await new Promise(function(r) { setTimeout(r, RETRY_DELAY); });
+                    return queryAI(userMessage, retries + 1);
+                }
+                return 'Connection error. Please check your network and try again.';
+            }
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const text = input.value.trim();
+            if (!text || isProcessing) return;
+            if (text.length > MAX_MSG_LENGTH) {
+                appendMessage('Please keep your message under ' + MAX_MSG_LENGTH + ' characters.', 'bot');
+                return;
+            }
+            if (isRateLimited()) {
+                appendMessage('You\'re sending messages too quickly. Please wait a moment.', 'bot');
+                return;
+            }
+
+            rateLimitLog.push(Date.now());
+            isProcessing = true;
+            input.value = '';
+            appendMessage(text, 'user');
+            showTyping();
+
+            const reply = await queryAI(text);
+            removeTyping();
+            appendMessage(reply, 'bot');
+            isProcessing = false;
+        });
+    })();
+
     // ===== Console Easter Egg =====
     console.log(
         '%c🙏 Shri Ganji Krishna Murthy — A Life of Excellence',
