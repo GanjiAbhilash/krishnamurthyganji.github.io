@@ -14,6 +14,15 @@
     });
     document.body.classList.add('no-scroll');
 
+    // ===== Retirement Badge (dynamic) =====
+    const retireBadge = document.getElementById('retireBadge');
+    if (retireBadge) {
+        const retireDate = new Date('2026-07-31T23:59:59+05:30');
+        if (new Date() > retireDate) {
+            retireBadge.textContent = 'Happily Retired since 31st July, 2026';
+        }
+    }
+
     // ===== Navigation =====
     const header = document.getElementById('header');
     const navToggle = document.getElementById('navToggle');
