@@ -320,6 +320,19 @@
             fab.classList.remove('hidden');
         }
 
+        // Auto-popup after 5s, auto-close after 3s if no interaction
+        let userInteracted = false;
+        fab.addEventListener('click', () => { userInteracted = true; });
+        panel.addEventListener('click', () => { userInteracted = true; });
+        setTimeout(() => {
+            openChat();
+            setTimeout(() => {
+                if (!userInteracted && panel.classList.contains('open')) {
+                    closeChat();
+                }
+            }, 3000);
+        }, 6000);
+
         fab.addEventListener('click', () => {
             openChat();
             input.focus();
