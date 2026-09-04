@@ -1000,28 +1000,6 @@ img {
     border-color: var(--border-color);
 }
 
-.family-photo-placeholder {
-    width: 80px;
-    height: 80px;
-    min-width: 80px;
-    background: rgba(200, 148, 62, 0.12);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--accent-gold);
-    font-size: 1.5rem;
-    margin: 0 auto 16px;
-}
-
-.family-card-main .family-photo-placeholder {
-    width: 100px;
-    height: 100px;
-    min-width: 100px;
-    font-size: 2rem;
-    margin: 0;
-}
-
 .family-relation {
     display: inline-block;
     font-size: 0.75rem;
@@ -1726,10 +1704,6 @@ img {
     .family-card-main {
         flex-direction: column;
         text-align: center;
-    }
-
-    .family-card-main .family-photo-placeholder {
-        margin: 0 auto;
     }
 
     .family-grid {
