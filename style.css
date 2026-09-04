@@ -1543,6 +1543,13 @@ img {
     border-left: 2px solid var(--accent-gold);
 }
 
+.footer-quote-source {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding-left: 22px;
+    margin-top: 10px;
+}
+
 .footer-bottom {
     display: flex;
     justify-content: space-between;
@@ -2027,5 +2034,320 @@ img {
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
+    }
+}
+
+/* ===== Hero Role Line ===== */
+.hero-role {
+    font-size: 0.95rem;
+    color: var(--accent-gold-light);
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+}
+
+/* ===== Postings & Contributions ===== */
+.postings-section {
+    margin-top: 80px;
+    padding-top: 64px;
+    border-top: 1px solid var(--border-light);
+}
+
+.postings-intro {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 40px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.postings-list {
+    display: grid;
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.posting-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-left: 3px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 24px 28px;
+    transition: var(--transition-base);
+}
+
+.posting-card:hover {
+    border-left-color: var(--accent-gold);
+    transform: translateX(4px);
+}
+
+.posting-card-highlight {
+    background: linear-gradient(135deg, rgba(200, 148, 62, 0.08), rgba(200, 148, 62, 0.02));
+    border-left-color: var(--accent-gold);
+}
+
+.posting-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.posting-num {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    opacity: 0.55;
+    line-height: 1.4;
+    flex-shrink: 0;
+}
+
+.posting-title {
+    flex: 1;
+    min-width: 0;
+}
+
+.posting-title h4 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.posting-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.posting-duration {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-gold);
+    background: rgba(200, 148, 62, 0.12);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 5px 12px;
+    white-space: nowrap;
+}
+
+.posting-desc {
+    font-size: 0.93rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.posting-desc strong {
+    color: var(--accent-gold-light);
+}
+
+/* ===== Farewell Address Scroll ===== */
+.farewell-section {
+    background: var(--bg-primary);
+}
+
+.scroll-card {
+    max-width: 860px;
+    margin: 0 auto;
+    background: var(--bg-warm);
+    color: var(--text-dark);
+    border-radius: var(--radius-lg);
+    padding: 56px 60px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(200, 148, 62, 0.45);
+    position: relative;
+}
+
+.scroll-card::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(200, 148, 62, 0.35);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+.scroll-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.scroll-org {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dark-secondary);
+}
+
+.scroll-assoc {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-gold-dark);
+    margin: 6px 0 4px;
+    line-height: 1.3;
+}
+
+.scroll-branch {
+    font-size: 0.9rem;
+    color: var(--text-dark-secondary);
+    letter-spacing: 1px;
+}
+
+.scroll-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 24px 0;
+    color: var(--accent-gold);
+}
+
+.scroll-rule span {
+    height: 1px;
+    width: 80px;
+    background: linear-gradient(to right, transparent, var(--accent-gold));
+}
+
+.scroll-rule span:last-child {
+    background: linear-gradient(to left, transparent, var(--accent-gold));
+}
+
+.scroll-presented {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--text-dark-secondary);
+}
+
+.scroll-name {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 8px 0;
+}
+
+.scroll-designation {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text-dark-secondary);
+    line-height: 1.7;
+}
+
+.scroll-body p {
+    font-size: 0.98rem;
+    line-height: 2;
+    color: var(--text-dark-secondary);
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+.scroll-body strong {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.scroll-salutation {
+    font-family: var(--font-display);
+    font-size: 1.15rem !important;
+    font-weight: 600;
+    color: var(--text-dark) !important;
+    text-align: left !important;
+}
+
+.scroll-cherish {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.2rem !important;
+    font-weight: 600;
+    text-align: center !important;
+    color: var(--accent-gold-dark) !important;
+    margin: 36px 0 0 !important;
+}
+
+.scroll-footer {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(200, 148, 62, 0.35);
+    text-align: right;
+}
+
+.scroll-yours {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--text-dark-secondary);
+    margin-bottom: 8px;
+}
+
+.scroll-signoff {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.7;
+}
+
+/* ===== Family Education Line ===== */
+.family-edu {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 6px;
+}
+
+.family-edu i {
+    color: var(--accent-gold);
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .posting-head {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .posting-duration {
+        order: 3;
+        margin-left: auto;
+    }
+
+    .posting-card {
+        padding: 20px;
+    }
+
+    .scroll-card {
+        padding: 36px 24px;
+    }
+
+    .scroll-card::before {
+        inset: 10px;
+    }
+
+    .scroll-name {
+        font-size: 1.5rem;
+    }
+
+    .scroll-assoc {
+        font-size: 1.2rem;
+    }
+
+    .scroll-body p {
+        text-align: left;
+        font-size: 0.92rem;
+        line-height: 1.9;
+    }
+
+    .scroll-rule span {
+        width: 48px;
     }
 }

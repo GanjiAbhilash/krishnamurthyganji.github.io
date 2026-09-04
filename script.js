@@ -303,9 +303,9 @@
 
         const SUGGESTED_QUESTIONS = [
             'What was his role at SCCL?',
-            'Tell me about his journey from Adoni',
+            'Where all was he posted?',
             'What are his major achievements?',
-            'How many years did he serve?',
+            'Tell me about his journey from Adoni',
             'How can I contact him?'
         ];
 
